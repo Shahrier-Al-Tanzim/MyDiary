@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+</head>
+<body>
+    <h1>Welcome to the website! <%= user.name %> </h1>
+    <a href="/logout">Logout</a>
+
+    <form action="/welcome" method="POST" enctype="multipart/form-data">
+        <label for="memory">Post your memory:</label>
+        <input type="text" id="memory" name="memory" placeholder="Enter your memory here">
+        
+        <label for="images">Upload images:</label>
+        <input type="file" id="images" name="images" accept="image/png, image/jpeg, image/jpg" multiple>
+        
+        <button type="submit">Submit</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Memory</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% memories.forEach(function(memory) { %>
+                <tr>
+                    <td><%= memory.memory %></td>
+                    <td><a href="/welcome/delete/<%= memory.id %>">Delete</a></td>
+                    <% memory.images.forEach(function(image) { %>
+                        <td> <img src ="C:/STUDY/SEM 3 - 1/Server_Programming/SERVER PROGRAMMING PROJECT/uploads/" <%= image.image %> alt = "image"></td>
+                        <!-- <td><img src="../uploads/<%= image.image %>" alt="image"></td> -->
+                    <% }); %>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <form action="/welcome/update" method="POST">
+        <label for="memoryId">Memory ID:</label>
+        <input type="text" id="memoryId" name="memoryId" placeholder="Enter memory ID">
+        <label for="updatedMemory">Updated Memory:</label>
+        <input type="text" id="updatedMemory" name="updatedMemory" placeholder="Enter updated memory">
+        <button type="submit">Update Memory</button>
+    </form>
+</body>
+</html>
+    
