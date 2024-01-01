@@ -71,6 +71,7 @@ const getWelcome = async (req, res) => {
 //   res.redirect('/welcome');
 // }
 const updateMemory = async (req, res) => {
+  console.log('Update Memory');
   const { updatedMemory, memoryId } = req.body;
   console.log(memoryId);
   let images = null;
