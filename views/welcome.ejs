@@ -29,10 +29,13 @@
                 <tr>
                     <td><%= memory.memory %></td>
                     <td><a href="/welcome/delete/<%= memory.id %>">Delete</a></td>
-                    <% memory.images.forEach(function(image) { %>
-                        <td> <img src ="C:/STUDY/SEM 3 - 1/Server_Programming/SERVER PROGRAMMING PROJECT/uploads/" <%= image.image %> alt = "image"></td>
-                        <!-- <td><img src="../uploads/<%= image.image %>" alt="image"></td> -->
-                    <% }); %>
+                    <% if (memory.images && Array.isArray(memory.images)) { %>
+                        <% memory.images.forEach(function(image) { %>
+                            <td> <img src ="C:/STUDY/SEM 3 - 1/Server_Programming/SERVER PROGRAMMING PROJECT/uploads/<%= image %>" alt = "image"></td>
+                            <!-- <td><img src="../uploads/<%= image.image %>" alt="image"></td> -->
+                        <% }); %>
+                    <% } %>
+                    
                 </tr>
             <% }); %>
         </tbody>

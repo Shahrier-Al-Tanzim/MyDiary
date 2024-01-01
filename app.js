@@ -1,7 +1,10 @@
 const express = require('express');
+const app = express();
+
 const passport = require('./config/passort');
 const session = require('express-session');
 const mongoose = require("mongoose");
+const flash = require('express-flash');
 const bodyParser = require("body-parser"); // parse the body of HTTP request
 // connecting to the database
 mongoose
@@ -16,8 +19,9 @@ mongoose
     console.log(error);
   });
 
-
-const app = express();
+  
+  
+app.use(flash());
 
 // use bodyparser
 app.use(bodyParser.urlencoded({ extended: false }));
