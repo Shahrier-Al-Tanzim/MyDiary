@@ -13,7 +13,10 @@
         
         <label for="images">Upload images:</label>
         <input type="file" id="images" name="images" accept="image/png, image/jpeg, image/jpg" multiple>
-        
+
+        <!-- Can input audio -->
+
+
         <button type="submit">Submit</button>
     </form>
     
@@ -41,11 +44,16 @@
         </tbody>
     </table>
 
-    <form action="/welcome/update" method="POST">
+    <form action="/welcome/update" method="POST" enctype="multipart/form-data"></form>
         <label for="memoryId">Memory ID:</label>
         <input type="text" id="memoryId" name="memoryId" placeholder="Enter memory ID">
+        
         <label for="updatedMemory">Updated Memory:</label>
         <input type="text" id="updatedMemory" name="updatedMemory" placeholder="Enter updated memory">
+
+        <label for="images">Add Images:</label>
+        <input type="file" id="images" name="images" accept="image/png, image/jpeg, image/jpg" multiple>
+        
         <button type="submit">Update Memory</button>
     </form>
 </body>
