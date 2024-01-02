@@ -12,11 +12,12 @@
         <input type="text" id="memory" name="memory" placeholder="Enter your memory here">
         
         <label for="images">Upload images:</label>
-        <input type="file" id="images" name="images" accept="image/png, image/jpeg, image/jpg" multiple>
+        <input type="file" name="filesFieldName" accept="image/png, image/jpeg, image/jpg" multiple>
 
         <button type="submit">Submit</button>
     </form>
-    
+    <br>
+    <p>Memories (with images) </p>
     <table>
         <thead>
             <tr>
@@ -35,12 +36,11 @@
                             <!-- <td><img src="../uploads/<%= image.image %>" alt="image"></td> -->
                         <% }); %>
                     <% } %>
-                    
                 </tr>
             <% }); %>
         </tbody>
     </table>
-
+    <br>
     <form action="/welcome/update" method="POST" enctype="multipart/form-data">
         <label for="memoryId">Memory ID:</label>
         <input type="text" id="memoryId" name="memoryId" placeholder="Enter memory ID">

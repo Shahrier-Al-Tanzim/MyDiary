@@ -7,6 +7,43 @@ const getDashboard = (req, res) => {
 
 // Create Memory
 
+// const postMemory = async (req, res) => {
+//   let { memory } = req.body;
+//   let images = null;
+//   let audio = null;
+
+//   // Check if images were uploaded
+//   if (req.files && req.files.length > 0) {
+//     images = req.files
+//       .filter((file) => file.fieldname === 'images') // Filter only images
+//       .map((file) => file.filename);
+//   }
+
+//   // Check if audio files were uploaded
+//   if (req.files && req.files.length > 0) {
+//     audio = req.files
+//       .filter((file) => file.fieldname === 'audio') // Filter only audio files
+//       .map((file) => file.filename);
+//   }
+
+//   const userId = req.user._id;
+//   const newMemory = new Memory({
+//     momoryownerid: userId,
+//     memory,
+//     images,
+//     audio,
+//   });
+
+//   try {
+//     await newMemory.save();
+//     res.redirect('/welcome');
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Failed to save memory" });
+//   }
+// };
+
+
 const postMemory = async (req, res) => {
   let { memory } = req.body;
   console.log(memory);
@@ -38,6 +75,36 @@ const postMemory = async (req, res) => {
   }
 };
 
+// post audio
+const postAudio = async (req, res) => {
+  const {audioMemory} = req.body;
+  console.log(audioMemory);
+  let audio = null; // Use 'let' instead of 'const'
+  if (!req.files || req.files.length === 0) {
+    audio = null;
+    // return res.status(400).json({ message: "No file provided" });
+  } else {
+    audio = req.files.map((file) => file.filename);
+    console.log(audio);
+  }
+  
+  const userId = req.user._id;
+  const user = await User.findById(userId);
+  console.log(user);
+
+  const newMemory = new Memory({
+    momoryownerid: userId,
+    audio,
+  });
+
+  try {
+    await newMemory.save();
+    res.redirect('/welcome');
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to save memory" });
+  }
+}
 
 // Read Memory
 const getWelcome = async (req, res) => {
@@ -45,31 +112,9 @@ const getWelcome = async (req, res) => {
   const user = await User.findById(userId);
   const memories = await Memory.find({momoryownerid: userId});
   res.render('welcome', {user: user, memories: memories});
-}
+} 
 
 // Update Memory
-// const updateMemory = async (req, res) => {
-//   const { updatedMemory, memoryId } = req.body;
-//   console.log(memoryId);
-//   let images = null; // Use 'let' instead of 'const'
-//   if (!req.files || req.files.length === 0) {
-//     images = null;
-//     // return res.status(400).json({ message: "No file provided" });
-//   } else {
-//     images = req.files.map((file) => file.filename);
-//     console.log(images);
-//   }
-//   if (images) {
-//     let memory = await Memory.findById(memoryId);
-//     let updatedImages = memory.images;
-//     for (let i = 0; i < images.length; i++) {
-//       updatedImages.push(images[i]);
-//     }
-//   }
-//   await Memory.findByIdAndUpdate(memoryId, { memory: updatedMemory, images: updatedImages });
-//   console.log('Updated');
-//   res.redirect('/welcome');
-// }
 const updateMemory = async (req, res) => {
   console.log('Update Memory');
   const { updatedMemory, memoryId } = req.body;
@@ -120,5 +165,6 @@ module.exports = {
   getWelcome,
   postMemory,
   updateMemory,
-  deleteMemory
+  deleteMemory,
+  postAudio,  
 }

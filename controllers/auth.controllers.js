@@ -1,5 +1,9 @@
 const passport = require("passport");
 const bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
+const crypto = require('crypto');
+const User = require("../models/user.model");
+const resettoken = require("../models/token.model");
 const getScope = passport.authenticate("google", {
   scope: ["email", "profile"]}
 );
@@ -39,7 +43,6 @@ const getRegister = (req, res) => {
   res.render("register");
 };
 
-const User = require("../models/user.model");
 
 const postRegister = async (req, res, next) => {
   const {  email, password } = req.body;
@@ -95,6 +98,101 @@ const postRegister = async (req, res, next) => {
     });
   }
 };
+
+
+var transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.AUTH_EMAIL,
+    pass: process.env.AUTH_PASS,
+  },
+  
+});
+
+
+
+const getForgotPass = async (req, res) => {
+  res.render("forgotpassword");
+};
+
+const forgotpassword = async(req, res) => {
+  // console.log(req.body)
+
+  const {email} = req.body;
+
+  try {
+      const userfind = await User.findOne({email:email});
+
+
+      // const userToken = await resettoken.findOne({ userId: userfind._id });
+      //     if (userToken) await userToken.remove();
+
+          const otp = crypto.randomBytes(2).toString("hex");
+                  const rtoken = new resettoken({ user_id: userfind._id, token: otp});
+                  const setusertoken = await rtoken.save();
+
+          console.log("here")
+
+      if(setusertoken){
+          const mailOptions = {
+              from:process.env.AUTH_EMAIL,
+              to:email,
+              subject:"Password Reset",
+              html:`<h2>Please use this OTP to reset your password</h2>
+              <h1>${otp}</h1>`
+          }
+
+          transporter.sendMail(mailOptions,(error,info)=>{
+              if(error){
+                  console.log("error",error);
+                  res.send({message:"Could not send email"})
+              }else{
+                  console.log("Email sent",info.response);
+                  res.redirect("/passreset")
+              }
+          })
+
+      }
+
+  } catch (error) {
+      res.send({message:"Invalid user"})
+  }
+};
+
+const getPassReset = async (req, res) => {
+  res.render("passreset");
+};  
+
+
+const passreset = async(req,res)=>{
+
+  const {otp, password} = req.body;
+
+  try {
+      const validtoken = await resettoken.findOne({token: otp});
+      
+      const validuser = await User.findOne({_id: validtoken.user_id})
+
+      if(validuser && validtoken){
+          const newpassword = await bcrypt.hash(password,10);
+
+          // const setnewuserpass = await User.updateOne({_id:validuser._id},{password:newpassword});
+          await User.updateOne({_id: validuser._id}, {$set: {password: newpassword}})
+
+          // setnewuserpass.save();
+          res.send({message:"Password has been reset"})
+
+      }else{
+          res.send({message:"User does not exist"})
+      }
+  } catch (error) {
+      res.send({error})
+  }
+}
+
+
 module.exports = {
   getScope,
   getCallback,
@@ -103,5 +201,9 @@ module.exports = {
   getLogin,
   postLogin,
   getRegister,
-  postRegister
+  postRegister,
+  getForgotPass,
+  forgotpassword,
+  getPassReset,
+  passreset  
 };
