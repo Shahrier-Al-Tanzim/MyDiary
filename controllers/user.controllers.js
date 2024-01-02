@@ -7,43 +7,6 @@ const getDashboard = (req, res) => {
 
 // Create Memory
 
-// const postMemory = async (req, res) => {
-//   let { memory } = req.body;
-//   let images = null;
-//   let audio = null;
-
-//   // Check if images were uploaded
-//   if (req.files && req.files.length > 0) {
-//     images = req.files
-//       .filter((file) => file.fieldname === 'images') // Filter only images
-//       .map((file) => file.filename);
-//   }
-
-//   // Check if audio files were uploaded
-//   if (req.files && req.files.length > 0) {
-//     audio = req.files
-//       .filter((file) => file.fieldname === 'audio') // Filter only audio files
-//       .map((file) => file.filename);
-//   }
-
-//   const userId = req.user._id;
-//   const newMemory = new Memory({
-//     momoryownerid: userId,
-//     memory,
-//     images,
-//     audio,
-//   });
-
-//   try {
-//     await newMemory.save();
-//     res.redirect('/welcome');
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Failed to save memory" });
-//   }
-// };
-
-
 const postMemory = async (req, res) => {
   let { memory } = req.body;
   console.log(memory);
@@ -77,15 +40,14 @@ const postMemory = async (req, res) => {
 
 // post audio
 const postAudio = async (req, res) => {
-  const {audioMemory} = req.body;
-  console.log(audioMemory);
+  const {memory} = req.body;
+  console.log(memory);
   let audio = null; // Use 'let' instead of 'const'
-  if (!req.files || req.files.length === 0) {
+  if (!req.file) {
     audio = null;
-    // return res.status(400).json({ message: "No file provided" });
+    return res.status(400).json({ message: "No file provided" });
   } else {
-    audio = req.files.map((file) => file.filename);
-    console.log(audio);
+    audio = req.file.filename;
   }
   
   const userId = req.user._id;
@@ -94,6 +56,7 @@ const postAudio = async (req, res) => {
 
   const newMemory = new Memory({
     momoryownerid: userId,
+    memory,
     audio,
   });
 
@@ -111,6 +74,7 @@ const getWelcome = async (req, res) => {
   const userId = req.user._id;
   const user = await User.findById(userId);
   const memories = await Memory.find({momoryownerid: userId});
+  console.log(memories);
   res.render('welcome', {user: user, memories: memories});
 } 
 

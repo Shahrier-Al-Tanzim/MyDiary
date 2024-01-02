@@ -17,6 +17,17 @@
         <button type="submit">Submit</button>
     </form>
     <br>
+
+    <!-- form for taking audio input file -->
+    <form action="/welcome/post-audio" method="POST" enctype="multipart/form-data">
+        <label for="memory">Post your memory:</label>
+        <input type="text" id="memory" name="memory" placeholder="Enter your memory here">
+        
+        <label for="audio">Upload audio:</label>
+        <input type="file" name="audio">
+
+        <button type="submit">Submit</button>
+    </form>
     <p>Memories (with images) </p>
     <table>
         <thead>
@@ -35,6 +46,13 @@
                             <td> <img src ="C:/STUDY/SEM 3 - 1/Server_Programming/SERVER PROGRAMMING PROJECT/uploads/<%= image %>" alt = "image"></td>
                             <!-- <td><img src="../uploads/<%= image.image %>" alt="image"></td> -->
                         <% }); %>
+                    <% } %>
+                <!-- output the single audio file  -->
+                <% if (memory.audio) { %>
+                            <td> <audio controls>
+                                    <source src="" type="audio/mp3">
+                                </audio>
+                            </td>
                     <% } %>
                 </tr>
             <% }); %>
