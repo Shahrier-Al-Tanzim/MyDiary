@@ -43,16 +43,18 @@
                     <td><a href="/welcome/delete/<%= memory.id %>">Delete</a></td>
                     <% if (memory.images && Array.isArray(memory.images)) { %>
                         <% memory.images.forEach(function(image) { %>
-                            <td> <img src ="C:\STUDY\SEM 3 - 1\Server_Programming\SERVER PROGRAMMING PROJECT\uploads\<%= image %>" alt = "image"></td>
-                            <!-- <td><img src="../uploads/<%= image.image %>" alt="image"></td> -->
+                            <td> <img src ="<%= image %>" alt = "image" 
+                                width="100" 
+                                height="100" ></td>
                         <% }); %>
                     <% } %>
                 <!-- output the single audio file  -->
                 <% if (memory.audio) { %>
                             <td> <audio controls>
-                                    <source src="C:\STUDY\SEM 3 - 1\Server_Programming\MyDiary\uploads" type="audio/mp3">
+                                    <source src="<%= memory.audio %>" type="audio/mp3">
                                 </audio>
                             </td>
+                            <td><%= memory.audio %></td>
                     <% } %>
                 </tr>
             <% }); %>

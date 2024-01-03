@@ -5,8 +5,9 @@ const {uploadImage, uploadAudioFiles} = require('../middlewares/image.middleware
 
 router.get("/welcome", isLoggedIn, userController.getWelcome);
 router.get("/", userController.getDashboard);
-router.post("/welcome", uploadImage.array('filesFieldName'), userController.postMemory);
-router.post("/welcome/update", uploadImage.array('images'), userController.updateMemory);
-router.get("/welcome/delete/:id", userController.deleteMemory);
-router.post("/welcome/post-audio", uploadAudioFiles.single('audio'), userController.postAudio);
+router.post("/welcome", isLoggedIn, uploadImage.array('filesFieldName'), userController.postMemory);
+router.post("/welcome", isLoggedIn, uploadImage.array('filesFieldName'), userController.postMemory);
+router.post("/welcome/update", isLoggedIn, uploadImage.array('images'), userController.updateMemory);
+router.get("/welcome/delete/:id", isLoggedIn,  userController.deleteMemory);
+router.post("/welcome/post-audio", isLoggedIn, uploadAudioFiles.single('audio'), userController.postAudio);
 module.exports = router;

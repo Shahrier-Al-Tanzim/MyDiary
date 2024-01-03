@@ -22,7 +22,7 @@ mongoose
   
   
 app.use(flash());
-app.use(express.static('views'));
+app.use(express.static('uploads'));
 // use bodyparser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
